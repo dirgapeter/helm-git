@@ -5,12 +5,14 @@ This plugin makes it possible to use a private/public repository on github/gitla
 ## Why this plugin
 
 Using git repo itself as the helm repo is better in my opinion because
+
 - It will cut down the need of having one more component to serve the charts. One less webserver to deal with and making it highly available.
 - No need of extra security layer to secure charts. They remain as secure as your code is. They use same authentication and authorisation as of your git repository.
 - No dependence of extra storage layer like EBS, S3 and its security/replication.
 - Charts live beside its code in the same repo and remain tightly version controlled with the code.
 
-Helm allows adding http and https repositories. So public repositories are not a problem. But it does have any authentication/authorisation feature for adding/accessing the charts in the repository yet. Adding a private repo is not straight forward. You have to create private access token ([github](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)/[gitlab](https://docs.gitlab.com/ee/api/README.html#personal-access-tokens)) and embed directly in the URI of the repo. Example: https://gitlab.com/username/repo/raw/master/kubernetes/helm-chart?private_token=2xMusKyEgA7BRw5TaJYA. The problems with this approach are:
+Helm allows adding http and https repositories. So public repositories are not a problem. But it does have any authentication/authorisation feature for adding/accessing the charts in the repository yet. Adding a private repo is not straight forward. You have to create private access token ([github](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)/[gitlab](https://docs.gitlab.com/ee/api/README.html#personal-access-tokens)) and embed directly in the URI of the repo. Example: <https://gitlab.com/username/repo/raw/master/kubernetes/helm-chart?private_token=2xMusKyEgA7BRw5TaJYA>. The problems with this approach are:
+
 - Security. You will have to make sure that you keep the token secure all the time.
 - Expiry. The token comes with a expiry. You will have to update the token in all repo's URI once it expires.
 - Running `helm repo list` prints the token in plain text every time. There is no way to hide it.
@@ -20,7 +22,8 @@ You will have to make these compromises without this plugin. If you are able to,
 ## Creating the helm repository
 
 Lets say that this is structure of your repository
-```
+
+```none
 .
 ├── Dockerfile
 ├── README.md
@@ -39,6 +42,7 @@ Lets say that this is structure of your repository
 ```
 
 Run the following commands to create repo index
+
 ```bash
 cd ./kubernetes/helm-chart
 helm package myapplication # generates myapplication.tgz
@@ -61,6 +65,7 @@ helm plugin install https://github.com/diwakar-s-maurya/helm-git
 ```
 
 Now add the repo,
+
 ```bash
 helm repo add myhelmrepo gitlab://username/project:master/kubernetes/helm-chart
 helm repo list
