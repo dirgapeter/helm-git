@@ -16,7 +16,12 @@ git init --quiet
 git remote add origin git@$PROVIDER.com:$REPO.git
 git pull --depth=1 --quiet origin $BRANCH 2>/dev/null
 if [ $? -ne 0 ]; then
-  git pull --depth=1 --quiet origin $BRANCH
+  sleep 10
+  git pull --depth=1 --quiet origin $BRANCH 2>/dev/null
+  if [ $? -ne 0 ]; then
+    sleep 10
+    git pull --depth=1 --quiet origin $BRANCH
+  fi
 fi
 
 if [ -f $FILEPATH ]; then # if a file named $FILEPATH exists
